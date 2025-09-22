@@ -1,6 +1,7 @@
 import argparse
 import csv
 import os
+from tabulate import tabulate
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Скрипт читает файлы с данными об успеваемости студентов и формирует отчеты')
@@ -14,10 +15,4 @@ if __name__ == '__main__':
         file_path = os.path.join(folder_name, file_name)
         with open(file_path, 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
-            for row in reader:
-                print(
-                    row["student_name"],
-                    row["subject"],
-                    row["teacher_name"],
-                    row["date"],
-                    row['grade'])
+            print(tabulate(reader, headers="keys", tablefmt="pipe"))
