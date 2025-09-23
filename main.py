@@ -10,10 +10,14 @@ def read_csv(file_names, folder_name):
     students = []
     for file_name in file_names:
         file_path = os.path.join(folder_name, file_name)
-        with open(file_path, 'r', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                students.append(row)
+        if os.path.exists(file_path):
+            with open(file_path, 'r', encoding='utf-8') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    students.append(row)
+        else:
+            print(f"Файл {file_path} не найден")
+
     return students
 
 
@@ -22,7 +26,7 @@ def get_student_grades(students):
     for student in students:
         student_grades[student['student_name']].append(int(student['grade']))
     student_grades = sorted(
-        [[name, sum(grades)/len(grades)] for name, grades in student_grades.items()],
+        [[name, round(sum(grades)/len(grades), 2)] for name, grades in student_grades.items()],
         key=lambda x: x[1],
         reverse=True)
     return student_grades
@@ -40,6 +44,8 @@ def main():
     if report_type == 'student-performance':
         student_performance = get_student_grades(students)
         print(tabulate(student_performance, headers=['student_name', 'grade'], tablefmt="pipe"))
+    else:
+        print('Неизвестная форма отчета')
 
 
 if __name__ == '__main__':
